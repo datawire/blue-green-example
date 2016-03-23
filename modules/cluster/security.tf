@@ -27,6 +27,14 @@ resource "aws_security_group" "cluster" {
     protocol = "-1"
   }
 
+  // allow SSH for the demo
+  ingress {
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port = 22
+    protocol = "tcp"
+    to_port = 22
+  }
+
   ingress {
     from_port = 80
     protocol = "tcp"

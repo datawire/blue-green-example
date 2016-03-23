@@ -24,6 +24,8 @@ resource "template_file" "blue_cloud_init" {
   vars = {
     message = "I am blue!"
   }
+
+  lifecycle { create_before_destroy = true }
 }
 
 resource "template_file" "green_cloud_init" {
@@ -31,6 +33,8 @@ resource "template_file" "green_cloud_init" {
   vars = {
     message = "I am green!"
   }
+
+  lifecycle { create_before_destroy = true }
 }
 
 
@@ -63,21 +67,21 @@ module "blue" {
   vpc_id                               = "${aws_vpc.main.id}"
 }
 
-//module "green" {
-//  source = "modules/cluster"
-//
-//  cluster_color                        = "green"
-//  cluster_max_size                     = "${var.green_cluster_max_size}"
-//  cluster_min_size                     = "${var.green_cluster_max_size}"
-//  cluster_load_balancer                = "${module.load_balancer.elb_name}"
-//  cluster_load_balancer_security_group = "${module.load_balancer.elb_source_security_group}"
-//  cluster_user_data                    = "${template_file.green_cloud_init.rendered}"
-//  environment_type                     = "dev"
-//  instance_image                       = "${var.green_instance_image}"
-//  instance_profile                     = "${aws_iam_instance_profile.green.id}"
-//  instance_type                        = "${var.green_instance_type}"
-//  service_name                         = "${var.service_name}"
-//  ssh_key                              = "${lookup(var.ssh_key_name, var.environment_region)}"
-//  subnets                              = "${join(",", aws_subnet.public.*.id)}"
-//  vpc_id                               = "${aws_vpc.main.id}"
-//}
+module "green" {
+  source = "modules/cluster"
+
+  cluster_color                        = "green"
+  cluster_max_size                     = "${var.green_cluster_max_size}"
+  cluster_min_size                     = "${var.green_cluster_max_size}"
+  cluster_load_balancer                = "${module.load_balancer.elb_name}"
+  cluster_load_balancer_security_group = "${module.load_balancer.elb_source_security_group}"
+  cluster_user_data                    = "${template_file.green_cloud_init.rendered}"
+  environment_type                     = "dev"
+  instance_image                       = "${var.green_instance_image}"
+  instance_profile                     = "${aws_iam_instance_profile.green.id}"
+  instance_type                        = "${var.green_instance_type}"
+  service_name                         = "${var.service_name}"
+  ssh_key                              = "${lookup(var.ssh_key_name, var.environment_region)}"
+  subnets                              = "${join(",", aws_subnet.public.*.id)}"
+  vpc_id                               = "${aws_vpc.main.id}"
+}

@@ -72,8 +72,6 @@ def swap(args):
     with open('terraform.tfvars') as file:
         tfvars = json.load(file)
 
-    autoscaling = boto3.client('autoscaling', tfvars['region'])
-
     current_color = terraform_output('color')
     if current_color is None:
         print("Deployment is not live")
